@@ -30,6 +30,7 @@ import java.io.IOException;
 import hu.mta.sztaki.lpds.cloud.simulator.helpers.job.Job;
 import hu.mta.sztaki.lpds.cloud.simulator.helpers.trace.file.GWFReader;
 import hu.mta.sztaki.lpds.cloud.simulator.helpers.trace.file.One2HistoryReader;
+import hu.mta.sztaki.lpds.cloud.simulator.helpers.trace.file.PreziReader;
 import hu.mta.sztaki.lpds.cloud.simulator.helpers.trace.file.SWFReader;
 import hu.mta.sztaki.lpds.cloud.simulator.helpers.trace.filters.Ignore;
 import hu.mta.sztaki.lpds.cloud.simulator.helpers.trace.random.SimpleRandomTraceGenerator;
@@ -78,7 +79,9 @@ public class FileBasedTraceProducerFactory {
 		GenericTraceProducer producer = null;
 		if (fileName.endsWith(".gwf")) {
 			producer = new GWFReader(fileName, from, to, furtherjobs, jobType);
-		} else if (fileName.endsWith(".swf")) {
+		} else if (fileName.endsWith(".log")) {	
+            producer = new PreziReader(fileName, from, to, furtherjobs, jobType);         
+        }else if (fileName.endsWith(".swf")) {
 			producer = new SWFReader(fileName, from, to, furtherjobs, jobType);
 		} else if (fileName.endsWith(".srtg")) {
 			SimpleRandomTraceGenerator srtg = SimpleRandomTraceGenerator.getInstanceFromFile(jobType, fileName);
@@ -90,8 +93,8 @@ public class FileBasedTraceProducerFactory {
 			srtg.setJobNum(to - from);
 			producer = srtg;
 		} else if (fileName.endsWith(".one2")) {
-			producer = new One2HistoryReader(fileName, from, to, furtherjobs, jobType);
-		} else {
+			producer = new One2HistoryReader(fileName, from, to, furtherjobs, jobType);		
+		}else {
 			return null;
 		}
 		File ignoreFile = new File(fileName + ".ign");
